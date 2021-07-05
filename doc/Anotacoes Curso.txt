@@ -2,7 +2,9 @@ Curso de JPA ALURA 2021
 
 05/07/2021 - Segunda feira.
 
-Criar projeto, adicionar pom.xml
+
+01 - Criar projeto, adicionar pom.xml
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -45,4 +47,111 @@ Criar projeto, adicionar pom.xml
     </build>
     
 </project>
+
+02 - Perstencia XML onde fica as congurações do banco de dados.
+<?xml version="1.0" encoding="utf-8" ?>
+<persistence version="2.2"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    
+    <persistence-unit name="loja" transaction-type="RESOURCE_LOCAL">
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:loja"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
+
+
+03 - Criado mapemento da tabela produtos.
+
+----------------------
+     produtos
+----------------------
+id_produto bigint(PK)
+----------------------
+nome varchar(30)
+descricao varchar(60)
+preco decimal
+----------------------
+
+@Entity
+@Table(name = "produtos")
+public class Produto{
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nome;
+    private String descricao;
+    private BigDecimal preco
+...
+}
+
+04 - Percistencia no banco de dados, CRUD.
+
+- Adicionado configurações no Percistense.xml para criar e mostrar sql do banco de dados já formtados.
+<property name="hibernate.show_sql" value="true"/>
+<property name="hibernate.format_sql" value="true"/>
+<property name="hibernate.hbm2ddl.auto" value="update"/>
+
+- Criado classe de teste para persistir (gravar) produtos no banco de dados.
+public class CadastroDeProduto {
+
+    public static void main(String[] args) {
+	
+	    //cria objeto produto
+        Produto celular = new Produto();
+        celular.setNome("Xiomi Redmi");
+        celular.setDescricao("Muto legal");
+        celular.setPreco(new BigDecimal("800"));
+
+        //cria persistencia 
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("loja");        
+		//cia conexão com o banco de dados.
+        EntityManager em = factory.createEntityManager();
+
+        //abre transação com o banco de dados. 
+        em.getTransaction().begin();
+		//insere na tabela produtos o celular.
+        em.persist(celular);		
+        em.getTransaction().commit();
+        //fecha transação
+        em.close();
+    }
+	
+05 - Organizando o Código
+
+- Criado classe que retorna um EntityManager
+public class JPAUtil {
+
+    private static final EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("loja");
+
+    public static EntityManager getFactory(){
+        return FACTORY.createEntityManager();
+    }
+}
+- Criado DAO onde vai ficar o métodos de acesso a banco de dados.
+    private EntityManager em;
+
+    public ProdutoDao(EntityManager em) {
+        this.em = em;
+    }
+
+    public void cadastrar(Produto produto){
+        em.persist(produto);
+    }
+
+
+
+	
+
+	
+
+
 

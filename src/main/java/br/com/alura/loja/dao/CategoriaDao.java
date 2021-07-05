@@ -16,4 +16,8 @@ public class CategoriaDao {
     public void cadastrar(Categoria categoria){
         em.persist(categoria);
     }
+
+    public void alterar(Categoria categoria){
+        em.merge(categoria);
+    }
 }

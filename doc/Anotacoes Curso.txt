@@ -219,6 +219,13 @@ Hibernate:
        references categorias
 
 
+08 - Ciclos de vida das entidades.
+
+# Transient: new Entidade(), não estáo na JPA.
+# Managed: persist() JPA gerencia.
+# Flush(): sincroniza no banco de dados, continuar mexendo.
+# Detached(): Close() / Clear() deixa de esta gerenciado.
+
 
 	
 

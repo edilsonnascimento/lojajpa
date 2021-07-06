@@ -222,9 +222,32 @@ Hibernate:
 08 - Ciclos de vida das entidades.
 
 # Transient: new Entidade(), não estáo na JPA.
-# Managed: persist() JPA gerencia.
-# Flush(): sincroniza no banco de dados, continuar mexendo.
-# Detached(): Close() / Clear() deixa de esta gerenciado.
+# Managed: persist(entidade)[transient para Managed], merge(entidade)[Detached para Managed], find()[Banco de Dados para Managed], createQuery()[Banco de Dados para Managed].
+# Detached: close() [Altera todas as entidades para Detached e fecha o EntityManager], clear()[Altera todas as entidades para Detached].
+# Banco de dados: commit()[Detached para Banco de Dados fecha a transação], flush()[Detached para Banco de Dados não fecha a transação].
+# Removed: remove() [Altera de Managed para Removed].
+
+09 - Método alterar com merge();
+
+public void alterar(Categoria categoria){
+        em.merge(categoria);
+}
+
+10 - Consulta do JPA
+
+Utilizando JPQL para fazer a consulta de lista
+public List<Produto> todos() {
+	String jpql = "SELECT p FROM Produto p";
+	return em.createQuery(jpql, Produto.class).getResultList();
+}
+
+Utilizando find() para buscar por ID
+public Produto buscar(long id) {
+	return em.find(Produto.class, id);
+}
+
+
+
 
 
 	

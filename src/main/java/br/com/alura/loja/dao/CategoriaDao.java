@@ -20,4 +20,9 @@ public class CategoriaDao {
     public void alterar(Categoria categoria){
         em.merge(categoria);
     }
+
+    public void excluir(Categoria categoria){
+        categoria = em.merge(categoria);
+        em.remove(categoria);
+    }
 }

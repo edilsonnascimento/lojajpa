@@ -1,4 +1,7 @@
-Curso de JPA ALURA 2021
+===========================================================================================================================
+## Primeira parte do curso de JPA
+===========================================================================================================================
+Curso de Persistência com JPA: Introdução ao Hibernate
 
 05/07/2021 - Segunda feira.
 
@@ -246,7 +249,50 @@ public Produto buscar(long id) {
 	return em.find(Produto.class, id);
 }
 
+11 - Consultas com filtros utilizando parämetros.
 
+public List<Produto> buscarNomeCategoria(String nome){
+	String jpql = "SELECT p FROM Produto p WHERE p.categoria.nome  = :nome";
+	return em.createQuery(jpql, Produto.class).setParameter("nome", nome).getResultList();
+}
+
+public BigDecimal buscarPrecoPorProduto(String nome){
+	String jpql = "SELECT p.preco FROM Produto p WHERE p.nome = :nome";
+	return em.createQuery(jpql, BigDecimal.class)
+			.setParameter("nome", nome)
+			.getSingleResult();
+}
+
+===========================================================================================================================
+## Segunda parte do curso de JPA
+Curso de Java e JPA: Consultas avançadas, performance e modelos complexos
+===========================================================================================================================
+
+1 - Mapeando novas tabelas
+
+----------------------
+     clientes
+----------------------
+id bigint(PK)
+----------------------
+nome varchar(30)
+cpf varchar(11)
+----------------------
+        (1)		
+		 |
+		 |
+		 |
+		 |		 
+		(*)
+----------------------
+     pedidos
+----------------------
+id bigint(PK)
+----------------------
+data date   date
+cliente_id  biint
+valor_total decimal
+----------------------
 
 
 

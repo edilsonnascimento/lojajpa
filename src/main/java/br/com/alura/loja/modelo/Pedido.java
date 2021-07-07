@@ -59,6 +59,14 @@ public class Pedido {
         this.valorTotal = valorTotal;
     }
 
+    public List<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemPedido> itens) {
+        this.itens = itens;
+    }
+
     public void adiciona(ItemPedido item){
         item.setPedido(this);
         itens.add(item);

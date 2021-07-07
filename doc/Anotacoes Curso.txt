@@ -312,7 +312,7 @@ valor_total decimal
 		 |		 
 		(*)
 ----------------------
-     itens_pedidos
+     itens_pedido
 ----------------------
 id bigint(PK)
 ----------------------
@@ -338,7 +338,57 @@ preco decimal
 ----------------------
 	
 
-	
+2 - Relacionamento bidirecional boas praticas
 
+mappedBy: indica que o relacionamento já está mapeado na tabela pedido
+@OneToMany(mappedBy = "pedido")
+private List<ItemPedido> itens;
+
+- Inicializar a lista.
+private List<ItemPedido> itens = new ArrayList<>();
+
+- Método para setar os dois lados do relacionamento
+public class Pedido {
+
+   ...
+   
+   @OneToMany(mappedBy = "pedido")
+   private List<ItemPedido> itens = new ArrayList<>();
+	
+	...
+	
+   public void adiciona(ItemPedido item){
+        item.setPedido(this);
+        itens.add(item);
+    }
+}
+
+
+3 - Cadastrando pedido 
+
+Tudo que acontece com o pedido deve refletir na itens_pedido, adicionado o cascade = CascadeType.ALL para isso.
+@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+private List<ItemPedido> itens = new ArrayList<>();
+	
+	
+4 - Consultas de agregação(MAX, AVG, SUM,...) e ajustado classes Pedido e ItensPedido para ajustar o preço.
+   public BigDecimal valorTotalVendido(){
+        String jpql = "SELECT SUM(p.valorTotal) FROM Pedido p";
+        return em.createQuery(jpql, BigDecimal.class).getSingleResult();
+    }
+
+5 - Consultas com select new da JPQL
+public List<RelatorioVendasVo> relatorioVendas(){
+	String jpql = "SELECT new br.com.alura.loja.vo.RelatorioVendasVo(" +
+				  "produto.nome, " +
+				  "       SUM(item.quantidade), " +
+				  "       MAX(pedido.data)) " +
+				  "FROM Pedido pedido " +
+				  "JOIN pedido.itens item " +
+				  "JOIN item.produto produto " +
+				  "GROUP BY produto.nome " +
+				  "ORDER BY SUM(item.quantidade) DESC";
+	return em.createQuery(jpql, RelatorioVendasVo.class).getResultList();
+}
 
 

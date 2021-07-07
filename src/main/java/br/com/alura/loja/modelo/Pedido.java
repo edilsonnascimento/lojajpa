@@ -16,7 +16,7 @@ public class Pedido {
     @ManyToOne
     private Cliente cliente;
     @Column(name = "valor_total")
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
 
@@ -62,5 +62,6 @@ public class Pedido {
     public void adiciona(ItemPedido item){
         item.setPedido(this);
         itens.add(item);
+        valorTotal = valorTotal.add(item.getValor());
     }
 }

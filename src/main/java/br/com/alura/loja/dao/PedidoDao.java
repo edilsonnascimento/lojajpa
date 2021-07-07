@@ -4,6 +4,7 @@ import br.com.alura.loja.modelo.Pedido;
 import br.com.alura.loja.modelo.Produto;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 
 public class PedidoDao {
 
@@ -28,5 +29,10 @@ public class PedidoDao {
 
     public Pedido buscar(long id) {
         return em.find(Pedido.class, id);
+    }
+
+    public BigDecimal valorTotalVendido(){
+        String jpql = "SELECT SUM(p.valorTotal) FROM Pedido p";
+        return em.createQuery(jpql, BigDecimal.class).getSingleResult();
     }
 }

@@ -31,6 +31,8 @@ public class CadastroDeItensPedidos {
 
         em.getTransaction().commit();
 
+        System.out.println(pedido.getValorTotal());
+
         em.close();
 
     }

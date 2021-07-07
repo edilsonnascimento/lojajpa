@@ -3,6 +3,8 @@ package br.com.alura.loja.modelo;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -13,7 +15,10 @@ public class Pedido {
     private LocalDate data = LocalDate.now();
     @ManyToOne
     private Cliente cliente;
+    @Column(name = "valor_total")
     private BigDecimal valorTotal;
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens = new ArrayList<>();
 
     public Pedido() {
     }
@@ -52,5 +57,10 @@ public class Pedido {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public void adiciona(ItemPedido item){
+        item.setPedido(this);
+        itens.add(item);
     }
 }

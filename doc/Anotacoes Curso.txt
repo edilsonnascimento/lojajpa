@@ -294,8 +294,48 @@ cliente_id  biint
 valor_total decimal
 ----------------------
 
+2 - Mapeando tabela item_pedido
 
-
+----------------------
+     pedidos
+----------------------
+id bigint(PK)
+----------------------
+data date   date
+cliente_id  biint
+valor_total decimal
+----------------------
+        (1)		
+		 |
+		 |
+		 |
+		 |		 
+		(*)
+----------------------
+     itens_pedidos
+----------------------
+id bigint(PK)
+----------------------
+preco_unitario decimal
+quantidade     int 
+produto_id     bigint
+pedido_id     bigint
+----------------------
+        (*)		
+		 |
+		 |
+		 |
+		 |		 
+		(1)
+----------------------
+     produtos
+----------------------
+id bigint(PK)
+----------------------
+nome varchar(30)
+descricao varchar(60)
+preco decimal
+----------------------
 	
 
 	

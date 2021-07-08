@@ -19,8 +19,11 @@ public class PerformaceConsultas {
 
         Pedido pedido = em.find(Pedido.class, 1l);
         System.out.println("Quantidade de itens no pedidos: " + pedido.getItens().size());
-
+        PedidoDao pedidoDao = new PedidoDao(em);
+        Pedido pedido2 = pedidoDao.buscarCliente(1l);
         em.close();
+
+        System.out.println(pedido2.getCliente().getNome());
 
     }
 

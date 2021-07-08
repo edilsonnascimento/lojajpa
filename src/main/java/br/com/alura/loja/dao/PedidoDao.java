@@ -1,7 +1,6 @@
 package br.com.alura.loja.dao;
 
 import br.com.alura.loja.modelo.Pedido;
-import br.com.alura.loja.modelo.Produto;
 import br.com.alura.loja.vo.RelatorioVendasVo;
 
 import javax.persistence.EntityManager;
@@ -49,5 +48,10 @@ public class PedidoDao {
                       "GROUP BY produto.nome " +
                       "ORDER BY SUM(item.quantidade) DESC";
         return em.createQuery(jpql, RelatorioVendasVo.class).getResultList();
+     }
+
+     public Pedido buscarCliente(Long idPedido){
+        String jpql = "SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :idPedido";
+        return em.createQuery(jpql, Pedido.class).setParameter("idPedido", idPedido).getSingleResult();
      }
 }

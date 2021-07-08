@@ -409,10 +409,11 @@ public class Produto{
                 .setParameter("nome", nome)
                 .getResultList();
     }
-
+----------------------------------------------------------------------------------------
 7 - Performace
+----------------------------------------------------------------------------------------
 
-Todo o relacionamento ToOne(ManyToOne ou OneToOne) por padrão é carregado junto com a entidade que está declado, 
+Todo o relacionamento ToOne(ManyToOne ou OneToOne) por padrão é carregado junto com a entidade que está declado, Eager.
 Exemplo:
 
 # Pedido possui um relacionamento com cliente.
@@ -445,5 +446,79 @@ Pedido pedido = em.find(Pedido.class, 1l);
             on pedido0_.cliente_id=cliente1_.id 
     where
         pedido0_.id=?
+
+Todo o relacionamento ToMany(OneToMany ou ManyToMany) por padrão precisa ser invocado para carregar, Lazy.
+Exemplo:
+
+# Pedido tem muitos itens relacionados.
+
+@Entity
+public class Pedido {
+     ....
+   @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemPedido> itens = new ArrayList<>();
+	..
+}	
+
+# Teste para saber a quantidade de itens no pedido 1 ai carrega os intens
+Pedido pedido = em.find(Pedido.class, 1l);
+System.out.println("Quantidade de itens no pedidos: " + pedido.getItens().size());
+
+# Saida
+    select
+        itens0_.pedido_id as pedido_i4_2_0_,
+        itens0_.id as id1_2_0_,
+        itens0_.id as id1_2_1_,
+        itens0_.pedido_id as pedido_i4_2_1_,
+        itens0_.precoUnitario as precouni2_2_1_,
+        itens0_.produto_id as produto_5_2_1_,
+        itens0_.quantidade as quantida3_2_1_,
+        produto1_.id as id1_4_2_,
+        produto1_.categoria_id as categori6_4_2_,
+        produto1_.dataCadastro as datacada2_4_2_,
+        produto1_.descricao as descrica3_4_2_,
+        produto1_.nome as nome4_4_2_,
+        produto1_.preco as preco5_4_2_,
+        categoria2_.id as id1_0_3_,
+        categoria2_.nome as nome2_0_3_ 
+    from
+        itens_pedido itens0_ 
+    left outer join
+        produtos produto1_ 
+            on itens0_.produto_id=produto1_.id 
+    left outer join
+        categorias categoria2_ 
+            on produto1_.categoria_id=categoria2_.id 
+    where
+        itens0_.pedido_id=?
+Quantidade de pedidos: 2
+
+Boa prática
+
+# Alterar relacionamentos @ToOne para Lazy
+
+----------------------------------------------------------------------------------------
+08 - Consultas com Join Fetch
+----------------------------------------------------------------------------------------
+
+Queries planejadas em algumas queries eu quero trazer a classe relacionada.
+
+Exemplo, carregar cliente do pedidido mesmo cliente sendo Lazy.
+@Entity
+public class Pedido {
+...
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cliente cliente;
+...
+}	
+
+public class PedidoDao{
+
+    ....
+    public Pedido buscarCliente(Long idPedido){
+        String jpql = "SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :idPedido";
+        return em.createQuery(jpql, Pedido.class).setParameter("idPedido", idPedido).getSingleResult();
+     }
+}
 
 

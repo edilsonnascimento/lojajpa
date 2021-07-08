@@ -68,8 +68,8 @@ public class Pedido {
     }
 
     public void adiciona(ItemPedido item){
-        item.setPedido(this);
         itens.add(item);
+        item.setPedido(this);
         valorTotal = valorTotal.add(item.getValor());
     }
 }

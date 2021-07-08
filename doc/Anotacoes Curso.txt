@@ -392,3 +392,20 @@ public List<RelatorioVendasVo> relatorioVendas(){
 }
 
 
+6 - Utilizando Named Queries
+
+- Definir Consultas na Entidade
+@Entity
+@Table(name = "produtos")
+@NamedQuery(name = "Produto.buscarNomeCategoria",
+            query = "SELECT p FROM Produto p WHERE p.categoria.nome  = :nome")
+public class Produto{
+...
+}
+
+- Chamar na classe DAO
+ public List<Produto> buscarNomeCategoria(String nome){
+        return em.createNamedQuery("Produto.buscarNomeCategoria", Produto.class)
+                .setParameter("nome", nome)
+                .getResultList();
+    }

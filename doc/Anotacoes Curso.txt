@@ -409,3 +409,41 @@ public class Produto{
                 .setParameter("nome", nome)
                 .getResultList();
     }
+
+7 - Performace
+
+Todo o relacionamento ToOne(ManyToOne ou OneToOne) por padrão é carregado junto com a entidade que está declado, 
+Exemplo:
+
+# Pedido possui um relacionamento com cliente.
+
+@Entity
+public class Pedido {
+     ....
+    @ManyToOne
+    private Cliente cliente;
+	..
+}	
+
+# Carrega pedido
+
+Pedido pedido = em.find(Pedido.class, 1l);
+
+# Carregado o cliente.
+ select
+        pedido0_.id as id1_3_0_,
+        pedido0_.cliente_id as cliente_4_3_0_,
+        pedido0_.data as data2_3_0_,
+        pedido0_.valor_total as valor_to3_3_0_,
+        cliente1_.id as id1_1_1_,
+        cliente1_.cpf as cpf2_1_1_,
+        cliente1_.nome as nome3_1_1_ 
+    from
+        pedidos pedido0_ 
+    left outer join
+        clientes cliente1_ 
+            on pedido0_.cliente_id=cliente1_.id 
+    where
+        pedido0_.id=?
+
+

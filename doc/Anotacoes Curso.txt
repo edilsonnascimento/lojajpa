@@ -522,3 +522,28 @@ public class PedidoDao{
 }
 
 
+----------------------------------------------------------------------------------------
+09 - Consultas com parâmetros dinâmicos
+----------------------------------------------------------------------------------------
+
+public List<Cliente> buscarClientes(String nome, LocalDate dataNascimento) {
+    String jpql = "SELECT c FROM Cliente c WHERE ";
+    if (nome != null && !nome.trim().isEmpty()) {
+        jpql += "AND c.nome = :nome ";
+    }
+    if (dataNascimento != null) {
+        jpql += " AND c.dataNascimento = :dataNascimento ";
+    }
+    TypedQuery<Cliente> query = em.createQuery(jpql, Cliente.class);
+    if (nome != null && !nome.trim().isEmpty()) {
+        query.setParameter("nome", nome);
+    }
+    if (dataNascimento != null) {
+        query.setParameter("dataNascimento", dataNascimento);
+    }
+    return query.getResultList();
+}
+
+----------------------------------------------------------------------------------------
+10 - Consultas com parâmetros dinâmicos com JPA
+----------------------------------------------------------------------------------------

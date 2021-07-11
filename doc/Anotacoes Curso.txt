@@ -545,5 +545,30 @@ public List<Cliente> buscarClientes(String nome, LocalDate dataNascimento) {
 }
 
 ----------------------------------------------------------------------------------------
-10 - Consultas com parâmetros dinâmicos com JPA
+10 - Imbutindo campos na classe @Embedded(atributo da Entity) @Embeddable(classe)
 ----------------------------------------------------------------------------------------
+
+@Entity
+@Table(name = "clientes")
+public class Cliente {
+
+.....
+  @Embedded
+    private DadosPessoais dadosPessoais;
+
+    public DadosPessoais getDadosPessoais() {
+        return dadosPessoais;
+    }
+
+    public String getNome(){
+        return this.dadosPessoais.getNome();
+    }
+}
+
+@Embeddable
+public class DadosPessoais {
+
+    private String nome;
+    private String cpf;
+ ...
+}

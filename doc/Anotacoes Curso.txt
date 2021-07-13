@@ -715,4 +715,70 @@ public class Produto{
        foreign key (id)
        references produtos
 
-proximo video 05 - Mapeamento de chaves compostas
+
+----------------------------------------------------------------------------------------
+12 - Chaves compostas
+----------------------------------------------------------------------------------------
+
+# Criar uma chave composta onde a categoria tem como chave os atributos nome e tipo
+
+@Embeddable
+public class CategoriaId implements Serializable {
+
+    private String nome;
+    private String tipo;
+
+    public CategoriaId() {
+    }
+
+    public CategoriaId(String nome, String tipo) {
+        this.nome = nome;
+        this.tipo = tipo;
+    }
+....
+}
+
+# Alterar Entity com chave composta para
+
+@Entity
+@Table(name = "categorias")
+public class Categoria {
+
+
+    @EmbeddedId
+    private CategoriaId id;
+
+    public Categoria(String nome, String tipo) {
+        id = new CategoriaId(nome, tipo);
+    }
+
+    public Categoria() {
+    }
+
+    public CategoriaId getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return id.getNome();
+    }
+
+    public void setId(CategoriaId id) {
+        this.id = id;
+    }
+}
+
+# Saída no console.
+    create table categorias (
+       nome varchar(255) not null,
+        tipo varchar(255) not null,
+        primary key (nome, tipo)
+    )
+
+# Fazendo busca
+
+- System.out.println(em.find(Categoria.class, new CategoriaId("Cozinha", "Default")));
+
+- Saida
+Categoria{id=CategoriaId{nome='Cozinha', tipo='Default'}}
+

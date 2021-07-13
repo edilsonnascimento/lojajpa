@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "produtos")
 @NamedQuery(name = "Produto.buscarNomeCategoria",
-            query = "SELECT p FROM Produto p WHERE p.categoria.nome  = :nome")
+            query = "SELECT p FROM Produto p WHERE p.categoria.id.nome  = :nome AND p.categoria.id.tipo = :tipo")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Produto{
 
